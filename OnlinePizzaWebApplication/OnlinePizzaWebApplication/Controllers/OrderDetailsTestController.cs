@@ -26,6 +26,24 @@ namespace OnlinePizzaWebApplication.Controllers
             return View(await appDbContext.ToListAsync());
         }
 
+        // GET: OrderDetailsTest/Details/5
+        public async Task<IActionResult> Details(int? id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+
+            var orderDetail = await _context.OrderDetails
+                .Include(o => o.Order)
+                .SingleOrDefaultAsync(m => m.OrderDetailId == id);
+            if (orderDetail == null)
+            {
+                return NotFound();
+            }
+
+            return View(orderDetail);
+        }
 
         // GET: OrderDetailsTest/Create
         public IActionResult Create()
@@ -51,24 +69,6 @@ namespace OnlinePizzaWebApplication.Controllers
             return View(orderDetail);
         }
 
-        // GET: OrderDetailsTest/Details/5
-        public async Task<IActionResult> Details(int? id)
-        {
-            if (id == null)
-            {
-                return NotFound();
-            }
-
-            var orderDetail = await _context.OrderDetails
-                .Include(o => o.Order)
-                .SingleOrDefaultAsync(m => m.OrderDetailId == id);
-            if (orderDetail == null)
-            {
-                return NotFound();
-            }
-
-            return View(orderDetail);
-        }
         // GET: OrderDetailsTest/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
