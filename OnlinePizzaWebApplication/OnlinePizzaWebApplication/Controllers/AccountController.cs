@@ -35,33 +35,6 @@ namespace OnlinePizzaWebApplication.Controllers
         [HttpPost]
         [AllowAnonymous]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Login(LoginViewModel model)
-        {
-            if (!ModelState.IsValid)
-                return View(model);
-
-            var user = await _userManager.FindByNameAsync(model.UserName);
-
-            if (user != null)
-            {
-                var result = await _signInManager.PasswordSignInAsync(user, model.Password, false, false);
-
-                if (result.Succeeded)
-                {
-                    if (string.IsNullOrEmpty(model.ReturnUrl))
-                        return RedirectToAction("Index", "Home");
-
-                    return Redirect(model.ReturnUrl);
-                }
-            }
-
-            ModelState.AddModelError("", "Username or Password was invalid.");
-            return View(model);
-        }
-
-        [HttpPost]
-        [AllowAnonymous]
-        [ValidateAntiForgeryToken]
         public async Task<IActionResult> Register(RegisterViewModel model)
         {
             if (ModelState.IsValid)
@@ -91,7 +64,32 @@ namespace OnlinePizzaWebApplication.Controllers
             });
         }
 
-        
+        [HttpPost]
+        [AllowAnonymous]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Login(LoginViewModel model)
+        {
+            if (!ModelState.IsValid)
+                return View(model);
+
+            var user = await _userManager.FindByNameAsync(model.UserName);
+
+            if (user != null)
+            {
+                var result = await _signInManager.PasswordSignInAsync(user, model.Password, false, false);
+
+                if (result.Succeeded)
+                {
+                    if (string.IsNullOrEmpty(model.ReturnUrl))
+                        return RedirectToAction("Index", "Home");
+
+                    return Redirect(model.ReturnUrl);
+                }
+            }
+
+            ModelState.AddModelError("", "Username or Password was invalid.");
+            return View(model);
+        }
 
         [Authorize]
         public async Task<IActionResult> LogOut()
